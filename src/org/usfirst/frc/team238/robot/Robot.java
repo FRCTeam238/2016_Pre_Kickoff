@@ -21,7 +21,7 @@ import edu.wpi.first.wpilibj.RobotDrive;
 public class Robot extends IterativeRobot {
 
 	private static int count = 0;
-	private static boolean AUTO_STARTED = false;
+	//private static boolean AUTO_STARTED = false;
 	/**
 	 * This function is run when the robot is first started up and should be
 	 * used for any initialization code.
@@ -47,10 +47,11 @@ public class Robot extends IterativeRobot {
 	public void disabledInit() {
 		try {
 			// only use checkForSmartDashboardChanges function in init methods
-			// or you will
-			// smoke the roborio into a useless pile of silicon
-			checkForSmartDashboardChanges("mode",
-					CrusaderCommon.PREFVALUE_OP_MODE_NORMAL);
+			// or you will smoke the roborio into a useless pile of silicon
+			checkForSmartDashboardChanges(CrusaderCommon.PREFERENCE_OP_MODE,CrusaderCommon.PREFVALUE_OP_MODE_NORMAL);
+			
+			System.out.println("disabledInit:");
+		
 		} catch (Exception ex) {
 			System.out.println("disabledInit exception");
 		}
@@ -63,15 +64,18 @@ public class Robot extends IterativeRobot {
 
 				count = 0;
 
-				String modeFromDS = SmartDashboard.getString("mode");
+				String modeFromDS = SmartDashboard.getString("auto");
+				System.out.println("disabledPeriodic:AmodeFromDS =  " + modeFromDS);
+				
 				if (modeFromDS != null) {
-					System.out.println("DSModeFromPeriodicDisabled = "
-							+ modeFromDS);
+					theMACP.pickAMode(Integer.parseInt(modeFromDS));
+					theMACP.dump();
 				}
 			}
 			count++;
 		} catch (Exception ex) {
-			System.out.println("disabledPriodic exception");
+			System.out.println("disabledPriodic exception" );
+			ex.printStackTrace();
 		}
 
 	}
@@ -82,8 +86,8 @@ public class Robot extends IterativeRobot {
 			// only use checkForSmartDashboardChanges function in init methods
 			// or you will
 			// smoke the roborio into a useless pile of silicon
-			checkForSmartDashboardChanges("mode",
-					CrusaderCommon.PREFVALUE_OP_MODE_NORMAL);
+			checkForSmartDashboardChanges("mode", CrusaderCommon.PREFVALUE_OP_AUTO_DEFAULT);
+			System.out.println("TeleopInit:");
 		} catch (Exception ex) {
 			System.out.println("TeleopInit:Exception");
 		}
@@ -99,7 +103,8 @@ public class Robot extends IterativeRobot {
 			// or you will
 			// smoke the roborio into a useless pile of silicon
 			try {
-				checkForSmartDashboardChanges("auto", "3");
+				checkForSmartDashboardChanges("auto", CrusaderCommon.PREFVALUE_OP_AUTO_DEFAULT);
+				System.out.println("AutononousInit:");
 			} catch (Exception ex) {
 				System.out.println("AutononousInit:CMDB Exception");
 			}
@@ -108,9 +113,11 @@ public class Robot extends IterativeRobot {
 			// RobotInit
 			try {
 			
-				autoMode = myPreferences.getString("auto", "3");
-				AUTO_STARTED = false;
-				autonomousDrive.killTimer();
+				autoMode = myPreferences.getString("auto", "0");
+				theMACP.pickAMode(Integer.parseInt(autoMode));
+				System.out.println("AutononousInit:Amode =  " + autoMode);
+				//AUTO_STARTED = false;
+				//autonomousDrive.killTimer();
 			} catch (Exception ex) {
 				System.out.println("AutononousInit:Timer");
 			}
@@ -123,7 +130,7 @@ public class Robot extends IterativeRobot {
 
 		try {
 			System.out.println("RobotInit()");
-			SmartDashboard.putString(CrusaderCommon.PREFERENCE_OP_MODE, "");
+			//SmartDashboard.putString(CrusaderCommon.PREFERENCE_OP_MODE, "");
 
 			//object that is the code representation for the physical control board
 			myControlBoard = new ControlBoard();
@@ -134,12 +141,11 @@ public class Robot extends IterativeRobot {
 			theLift.liftInit();
 			System.out.println("The Lift is Born!");
 
-			
-
 			theArm = new Arm();
 			theArm.armInit();
 			
 			myRobotDrive = new RobotDrive(0, 1, 2, 3);
+			myRobotDrive.setSafetyEnabled(false);
 			
 			autonomousDrive = new AutonomousDrive(myRobotDrive);
 			autonomousDrive.init();

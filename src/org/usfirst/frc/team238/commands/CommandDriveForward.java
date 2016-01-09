@@ -22,7 +22,7 @@ public class CommandDriveForward implements Command {
 		}
 		else
 		{
-			
+			myRobotDrive.startTick();
 			AUTO_STARTED = true;
 		}
 	}
@@ -32,9 +32,11 @@ public class CommandDriveForward implements Command {
 
 	}
 	
-	public void setParams()
+	public void setParams(String params[])
 	{
+		int value = Integer.parseInt(params[0]);
 		
+		myRobotDrive.setParam1(value);
 	}
 	 
 	public boolean complete()

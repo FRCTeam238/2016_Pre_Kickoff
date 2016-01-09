@@ -11,7 +11,7 @@ public class StateLoadBin implements AutonomousState {
 	
 	
 	@Override
-	public void init(int value, CommandController theMcp) {
+	public void init(String params[], CommandController theMcp) {
 		liftCmd = theMcp.getLiftCmd();
 	}
 

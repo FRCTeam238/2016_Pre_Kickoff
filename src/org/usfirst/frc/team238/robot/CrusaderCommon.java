@@ -16,7 +16,7 @@ public class CrusaderCommon {
 	public static final String PREFERENCE_OP_MODE = "mode";
 	public static final String PREFVALUE_OP_MODE_NORMAL = "normal";
 	public static final String PREFVALUE_OP_MODE_TEST = "test";
-	public static final String PREFVALUE_OP_AUTO = "auto";
+	//public static final String PREFVALUE_OP_AUTO = "auto";
 	public static final String PREFVALUE_OP_AUTO_DEFAULT = "1";
 	
 	//two types of command lists

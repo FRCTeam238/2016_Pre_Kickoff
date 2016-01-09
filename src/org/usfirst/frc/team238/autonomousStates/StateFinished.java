@@ -12,7 +12,7 @@ public class StateFinished implements AutonomousState {
 	}
 
 	@Override
-	public void init(int value, CommandController theMcp) {
+	public void init(String params[], CommandController theMcp) {
 		// TODO Auto-generated method stub
 
 	}

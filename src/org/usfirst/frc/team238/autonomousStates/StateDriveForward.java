@@ -9,12 +9,13 @@ public class StateDriveForward implements AutonomousState {
 	CommandDriveForward cmdDrFwd;
 	int count = 0;
 	@Override
-	public void init(int howfar, CommandController theMcp)
+	public void init(String params[], CommandController theMcp)
 	{
-		System.out.println("StateDriveForward = "
-				+ String.valueOf(howfar));
+		//System.out.println("StateDriveForward = "
+		//		+ String.valueOf(howfar));
 		//get specific  objects needed for creating the command object 
 		cmdDrFwd = theMcp.getAutoCmd();
+		cmdDrFwd.setParams(params);
 	}
 	
 	@Override

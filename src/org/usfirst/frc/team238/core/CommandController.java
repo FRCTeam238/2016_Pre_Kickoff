@@ -85,13 +85,18 @@ public class CommandController {
 					CrusaderCommon.DRIVE_TRAIN_CMD_IDX,
 					cmdToDriveTheRobot);
 		
-		setCommand(	CrusaderCommon.LEFTDRIVER_CMD_LIST,
-					CrusaderCommon.LEFTDRIVER_CMD_IDX_DONOTHING,
-					theDoNothingLeftDriverCmd);
-		
+		//not using any buttons on the drivers controls so put dummy objects in their command list
+		for(int i = 0; i < 10; i++)
+		{
+			setCommand(	CrusaderCommon.LEFTDRIVER_CMD_LIST, i, theDoNothingLeftDriverCmd);
+			setCommand(	CrusaderCommon.RIGHTDRIVER_CMD_LIST, i, theDoNothingRightDriverCmd);
+		}
+	
+		/*
 		setCommand(	CrusaderCommon.RIGHTDRIVER_CMD_LIST,
 					CrusaderCommon.RIGHTDRIVER_CMD_IDX_DONOTHING,
 					theDoNothingRightDriverCmd);
+		
 		
 		setCommand(	CrusaderCommon.LEFTDRIVER_CMD_LIST,
 					CrusaderCommon.LEFTDRIVER_CMD_IDX_SPINRIGHT,
@@ -124,43 +129,45 @@ public class CommandController {
 					CrusaderCommon.RIGHTDRIVER_CMD_IDX_SHIFTHIGH,
 					theDoNothingRightDriverCmd);
 		
-		
+		*/
 	}
 	
 	private void setupOperatorCommands(Lift theLift, Arm theArm)
 	{
 		theDoNothingCmd = new NoOperatorCommand(theLift);
-		setCommand(CrusaderCommon.OPR_CMD_LIST,
-				CrusaderCommon.OPR_CMD_IDX_DONOTHING, theDoNothingCmd);
+		setCommand( CrusaderCommon.OPR_CMD_LIST,
+					CrusaderCommon.OPR_CMD_IDX_DONOTHING, 
+					theDoNothingCmd);
 
 		operatorCmdSetToGround = new CommandGoToGround(theLift);
-		setCommand(CrusaderCommon.OPR_CMD_LIST,
-				CrusaderCommon.OPR_CMD_IDX_SETTOGROUND,
-				operatorCmdSetToGround);
+		setCommand( CrusaderCommon.OPR_CMD_LIST,
+					CrusaderCommon.OPR_CMD_IDX_SETTOGROUND,
+					operatorCmdSetToGround);
 
 		operatorCmdSetToTravel = new CommandGoToTravel(theLift);
-		setCommand(CrusaderCommon.OPR_CMD_LIST,
-				CrusaderCommon.OPR_CMD_IDX_SETTOTRAVEL,
-				operatorCmdSetToTravel);
+		setCommand( CrusaderCommon.OPR_CMD_LIST,
+					CrusaderCommon.OPR_CMD_IDX_SETTOTRAVEL,
+					operatorCmdSetToTravel);
 
 		operatorCmdSetToLift = new CommandGoToLift(theLift);
-		setCommand(CrusaderCommon.OPR_CMD_LIST,
-				CrusaderCommon.OPR_CMD_IDX_SETTOLIFT, operatorCmdSetToLift);
+		setCommand( CrusaderCommon.OPR_CMD_LIST,
+					CrusaderCommon.OPR_CMD_IDX_SETTOLIFT, 
+					operatorCmdSetToLift);
 
 		operatorCmdSetToDeliver = new CommandGoToDeliver(theLift);
-		setCommand(CrusaderCommon.OPR_CMD_LIST,
-				CrusaderCommon.OPR_CMD_IDX_SETTODELIVER,
-				operatorCmdSetToDeliver);
+		setCommand( CrusaderCommon.OPR_CMD_LIST,
+					CrusaderCommon.OPR_CMD_IDX_SETTODELIVER,
+					operatorCmdSetToDeliver);
 
 		operatorCmdCoopPoints = new CommandCoopPoints(theLift);
-		setCommand(CrusaderCommon.OPR_CMD_LIST,
-				CrusaderCommon.OPR_CMD_IDX_COOPPOINTS,
-				operatorCmdCoopPoints);
+		setCommand( CrusaderCommon.OPR_CMD_LIST,
+					CrusaderCommon.OPR_CMD_IDX_COOPPOINTS,
+					operatorCmdCoopPoints);
 		
 		raiseArmCMD = new CommandRaiseArm(theArm);
-		setCommand(CrusaderCommon.OPR_CMD_LIST, 
-				CrusaderCommon.OPR_CMD_IDX_RAISEARM,
-				raiseArmCMD);
+		setCommand( CrusaderCommon.OPR_CMD_LIST, 
+					CrusaderCommon.OPR_CMD_IDX_RAISEARM,
+					raiseArmCMD);
 	}
 	
 	private void setCommand(int list, int slot, Command command){
