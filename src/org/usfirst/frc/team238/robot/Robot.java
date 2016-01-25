@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.RobotDrive;
+import edu.wpi.first.wpilibj.CANTalon;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -28,27 +29,27 @@ public class Robot extends IterativeRobot {
 	 */
 	Arm theArm;
 	Lift theLift;
-	//Claws rightClaw;
-	//Claws leftClaw;
+	CANTalon leftFrontDrive; //id = 1
+	CANTalon leftRearDrive; //id = 2
+	CANTalon rightFrontDrive; //id = 3
+	CANTalon rightRearDrive; //id = 4
 	
 	
 	Preferences myPreferences;
 	ControlBoard myControlBoard;
 	CommandController theMCP;
 	RobotDrive myRobotDrive;
+
 	// Autonomous Mode Support
 	String autoMode;
 	AutonomousDrive autonomousDrive;
-
-	
-
 	private AutonomousController theMACP;
 
 	public void disabledInit() {
 		try {
 			// only use checkForSmartDashboardChanges function in init methods
 			// or you will smoke the roborio into a useless pile of silicon
-			checkForSmartDashboardChanges(CrusaderCommon.PREFERENCE_OP_MODE,CrusaderCommon.PREFVALUE_OP_MODE_NORMAL);
+			checkForSmartDashboardChanges(CrusaderCommon.PREFVALUE_OP_AUTO, CrusaderCommon.PREFVALUE_OP_AUTO_DEFAULT);
 			
 			System.out.println("disabledInit:");
 		
@@ -64,11 +65,16 @@ public class Robot extends IterativeRobot {
 
 				count = 0;
 
-				String modeFromDS = SmartDashboard.getString("auto");
-				System.out.println("disabledPeriodic:AmodeFromDS =  " + modeFromDS);
+				String automousModeFromDS = SmartDashboard.getString(CrusaderCommon.PREFVALUE_OP_AUTO);
+				System.out.println("disabledPeriodic:AmodeFromDS =  " + automousModeFromDS);
 				
-				if (modeFromDS != null) {
-					theMACP.pickAMode(Integer.parseInt(modeFromDS));
+				if (automousModeFromDS != null) {
+					
+					if (automousModeFromDS.isEmpty()){
+						automousModeFromDS =  CrusaderCommon.PREFVALUE_OP_AUTO_DEFAULT; 
+					}
+					
+					theMACP.pickAMode(Integer.parseInt(automousModeFromDS));
 					theMACP.dump();
 				}
 			}
@@ -86,7 +92,7 @@ public class Robot extends IterativeRobot {
 			// only use checkForSmartDashboardChanges function in init methods
 			// or you will
 			// smoke the roborio into a useless pile of silicon
-			checkForSmartDashboardChanges("mode", CrusaderCommon.PREFVALUE_OP_AUTO_DEFAULT);
+			//checkForSmartDashboardChanges("mode", CrusaderCommon.PREFVALUE_OP_AUTO_DEFAULT);
 			System.out.println("TeleopInit:");
 		} catch (Exception ex) {
 			System.out.println("TeleopInit:Exception");
@@ -103,7 +109,7 @@ public class Robot extends IterativeRobot {
 			// or you will
 			// smoke the roborio into a useless pile of silicon
 			try {
-				checkForSmartDashboardChanges("auto", CrusaderCommon.PREFVALUE_OP_AUTO_DEFAULT);
+				checkForSmartDashboardChanges(CrusaderCommon.PREFVALUE_OP_AUTO, CrusaderCommon.PREFVALUE_OP_AUTO_DEFAULT);
 				System.out.println("AutononousInit:");
 			} catch (Exception ex) {
 				System.out.println("AutononousInit:CMDB Exception");
@@ -113,11 +119,11 @@ public class Robot extends IterativeRobot {
 			// RobotInit
 			try {
 			
-				autoMode = myPreferences.getString("auto", "0");
+				autoMode = SmartDashboard.getString(CrusaderCommon.PREFVALUE_OP_AUTO); 
+						//myPreferences.getString(CrusaderCommon.PREFVALUE_OP_AUTO, "3");
 				theMACP.pickAMode(Integer.parseInt(autoMode));
 				System.out.println("AutononousInit:Amode =  " + autoMode);
-				//AUTO_STARTED = false;
-				//autonomousDrive.killTimer();
+				
 			} catch (Exception ex) {
 				System.out.println("AutononousInit:Timer");
 			}
@@ -130,7 +136,7 @@ public class Robot extends IterativeRobot {
 
 		try {
 			System.out.println("RobotInit()");
-			//SmartDashboard.putString(CrusaderCommon.PREFERENCE_OP_MODE, "");
+			SmartDashboard.putString(CrusaderCommon.PREFVALUE_OP_AUTO, "");
 
 			//object that is the code representation for the physical control board
 			myControlBoard = new ControlBoard();
@@ -139,12 +145,17 @@ public class Robot extends IterativeRobot {
 			//Create robot core objects 
 			theLift = new Lift();
 			theLift.liftInit();
-			System.out.println("The Lift is Born!");
+			System.out.println("Storm the Castle!");
 
 			theArm = new Arm();
 			theArm.armInit();
 			
-			myRobotDrive = new RobotDrive(0, 1, 2, 3);
+			leftFrontDrive = new CANTalon(1);  //id = 1
+			leftRearDrive = new CANTalon(2);   //id = 2
+			rightFrontDrive = new CANTalon(3); //id = 3
+			rightRearDrive = new CANTalon(4);  //id = 4
+			
+			myRobotDrive = new RobotDrive(leftFrontDrive,leftRearDrive,rightFrontDrive,rightRearDrive);
 			myRobotDrive.setSafetyEnabled(false);
 			
 			autonomousDrive = new AutonomousDrive(myRobotDrive);
@@ -225,7 +236,7 @@ public class Robot extends IterativeRobot {
 
 		String valueFromPrefs = myPreferences.getString(key, value);
 		if (valueFromPrefs != null) {
-			System.out.println("PREFs:" + key + " = " + valueFromPrefs);
+			System.out.println("CheckSDChanges:valueFromPrefs : " + key + " = " + valueFromPrefs);
 			String valueFromDS = null;
 			
 			try {
@@ -235,16 +246,15 @@ public class Robot extends IterativeRobot {
 				SmartDashboard.putString(key, valueFromPrefs);
 			}
 
-			System.out.println("PREFs_DS:" + key + " = " + valueFromDS);
+			System.out.println("CheckSDChanges.ValFromDS : " + key + " = " + valueFromDS);
 
 			// check for null and also if it's empty don't overwrite what's in
 			// the preferences table
-			if ((valueFromDS != null) && (!valueFromDS.isEmpty())) {
-				System.out.println("SB:" + key + " = " + valueFromDS);
-
-				// if they are not the same then update the preferences
+			if ((valueFromDS != null)  && (!valueFromDS.isEmpty())) {
+								// if they are not the same then update the preferences
 				if (!valueFromPrefs.equalsIgnoreCase(valueFromDS)) {
-
+					
+					System.out.println("CheckSDChanges.UpdatePrefs" + key + " = " + valueFromDS);
 					myPreferences.putString(key, valueFromDS);
 
 					// NEVER NEVER use this save() in a periodic function or you
@@ -253,6 +263,12 @@ public class Robot extends IterativeRobot {
 					// silicon
 					myPreferences.save();
 				}
+			}
+			
+			if(( valueFromDS != null) && (valueFromDS.isEmpty()) && (!valueFromPrefs.isEmpty())) {
+			
+				SmartDashboard.putString(key, valueFromPrefs);
+			
 			}
 		}
 	}

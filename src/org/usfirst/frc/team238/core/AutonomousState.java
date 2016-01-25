@@ -7,4 +7,5 @@ public interface AutonomousState {
 	public void init(String params[], CommandController theMcp);
 	public void process();
 	public boolean done();
+	public void reset();
 }

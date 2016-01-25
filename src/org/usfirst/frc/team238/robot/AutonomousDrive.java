@@ -37,10 +37,12 @@ public class AutonomousDrive {
 	 *   
 	 */
 	boolean actionComplete = false;
+	
 	public void resetAction()
 	{
 		actionComplete = false;
 	}
+	
 	public void setParam1(int value){
 		param1 = value;
 	}
@@ -52,6 +54,7 @@ public class AutonomousDrive {
 		}
 		
 		if(actionComplete){
+			idle();
 			killTimer();
 		}
 		
@@ -61,7 +64,7 @@ public class AutonomousDrive {
 	public void killTimer()
 	{
 		autonomousTimer.stop();
-		//autonomousTimer.reset();
+		autonomousTimer.reset();
 	}
 	//Reset sets the encoder to zero. Get gets the current count
 	public void startTick()

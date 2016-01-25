@@ -11,6 +11,12 @@ public class StateFinished implements AutonomousState {
 
 	}
 
+	//used when autonomous is interrupted
+	@Override
+	public void reset() {
+		
+	}
+	
 	@Override
 	public void init(String params[], CommandController theMcp) {
 		// TODO Auto-generated method stub

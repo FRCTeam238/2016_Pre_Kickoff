@@ -21,6 +21,12 @@ public class StateLoadBin implements AutonomousState {
 		
 	}
 	
+	//used when autonomous is interrupted
+	@Override
+	public void reset() {
+		
+	}
+	
 	@Override
 	public void process() {
 		System.out.println("StateLoadBin ");

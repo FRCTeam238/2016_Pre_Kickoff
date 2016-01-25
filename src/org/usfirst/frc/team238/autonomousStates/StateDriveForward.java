@@ -36,6 +36,11 @@ public class StateDriveForward implements AutonomousState {
 		return false;
 	}
 
+	//used when autonomous is interrupted
+	@Override
+	public void reset() {
+		cmdDrFwd.reset();
+	}
 	@Override
 	public void init() {
 		// TODO Auto-generated method stub

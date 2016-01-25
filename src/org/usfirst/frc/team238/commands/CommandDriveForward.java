@@ -43,5 +43,12 @@ public class CommandDriveForward implements Command {
 	{
 		 return myRobotDrive.isActionComplete();
 	}
+	
+	public void reset() {
+		
+		AUTO_STARTED = false;
+		myRobotDrive.killTimer();
+
+	}
 
 }

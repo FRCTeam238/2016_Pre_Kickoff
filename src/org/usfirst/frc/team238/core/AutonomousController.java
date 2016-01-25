@@ -49,6 +49,10 @@ public class AutonomousController implements AutonomousState {
 	{	
 		
 	}
+	public void reset()
+	{	
+		
+	}
 	
 	public void pickAMode(int mode){
 		steps = autonomousModeList [mode];
